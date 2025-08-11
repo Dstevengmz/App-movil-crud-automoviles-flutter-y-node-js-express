@@ -1,9 +1,15 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import userRouter from "./routers/user.js";
 import carroRouter from "./routers/carro.js";
-dotenv.config();
+import alquilerRouter from "./routers/alquiler.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '..', '.env') });
 
 const app = express();
 
@@ -20,6 +26,7 @@ mongoose
 
 app.use("/api", userRouter);
 app.use("/api", carroRouter);
+app.use("/api", alquilerRouter);
 app.get("/", (req, res) => {
   res.send("La pagina esta corriendo");
 });

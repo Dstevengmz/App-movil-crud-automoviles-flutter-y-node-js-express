@@ -3,6 +3,7 @@ import 'detalleVehiculo.dart';
 import 'editarVehiculo.dart';
 import 'package:flutter_application_junio5/views/medioPago.dart';
 import 'package:flutter_application_junio5/views/menuDrawrs.dart';
+import 'mis_alquileres.dart';
 import '../services/apiserviciocarro.dart';
 
 class MenuPrincipal extends StatefulWidget {
@@ -165,11 +166,13 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                                     MaterialPageRoute(
                                       builder:
                                           (context) => DetalleVehiculo(
+                                            carroId: id,
                                             marca: marca,
                                             modelo: modelo,
                                             anio: anio,
                                             disponible: disponibilidad,
                                             imagenUrl: imageUrl,
+                                            precio: precio.toDouble(),
                                           ),
                                     ),
                                   );
@@ -219,10 +222,9 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
               MaterialPageRoute(builder: (context) => const MedioPago()),
             );
           } else if (value == 3) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Funcionalidad de Alquiler no implementada'),
-              ),
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MisAlquileres()),
             );
           }
         },

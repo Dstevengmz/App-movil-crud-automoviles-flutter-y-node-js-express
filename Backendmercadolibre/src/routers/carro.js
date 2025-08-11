@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post("/carro", async (req, res) => {
   try {
-    const { marca, modelo, anio, disponible, imagenUrl } = req.body;
+    const { marca, modelo, anio, disponible, imagenUrl, precio } = req.body;
 
     const disponibleBoolean = (disponible === "true" || disponible === true);
 
@@ -20,6 +20,7 @@ router.post("/carro", async (req, res) => {
       anio,
       disponible: disponibleBoolean,
       imagenUrl,
+      precio: precio || 50000, // Precio por defecto
     });
 
     const carro = await newCarro.save();
@@ -58,9 +59,9 @@ router.get("/carro/:id", async (req, res) => {
 
 router.put("/carro/:id", async (req, res) => {
   const { id } = req.params;
-  const {  marca, modelo, anio, disponible, imagenUrl } = req.body;
+  const { marca, modelo, anio, disponible, imagenUrl, precio } = req.body;
   console.log("Actualizando carro con ID:", id);
-  Carro.updateOne({ _id: id }, { $set: { marca, modelo, anio, disponible, imagenUrl  } })
+  Carro.updateOne({ _id: id }, { $set: { marca, modelo, anio, disponible, imagenUrl, precio } })
     .then((data) => res.status(200).json(data))
     .catch((err) => {
       console.error("Error al actualizar el carro", err);

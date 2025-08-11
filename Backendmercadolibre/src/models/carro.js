@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const carroSchema = new mongoose.Schema({
   marca: {
     type: String,
     required: true,
@@ -12,17 +12,21 @@ const userSchema = new mongoose.Schema({
   anio: {
     type: Number,
     required: true,
-
   },
   disponible: {
     type: Boolean,
     required: true,
   },
-    imagenUrl: {
+  imagenUrl: {
     type: String,
     required: true,
   },
+  precio: {
+    type: Number,
+    required: true,
+    default: 25000,
+  },
 });
 
-const Carro = mongoose.model("Carro", userSchema);
+const Carro = mongoose.model("Carro", carroSchema);
 export default Carro;

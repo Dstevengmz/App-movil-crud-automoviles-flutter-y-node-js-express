@@ -1,5 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../models/usuario.dart';
+import 'session_manager.dart';
 
 class ApiService {
   static Future<Map<String, dynamic>> login(
@@ -17,12 +19,19 @@ class ApiService {
     final data = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      return {'success': true, 'data': data};
+      final usuario = Usuario.fromJson(data['user']);
+      SessionManager.setCurrentUser(usuario);
+
+      return {'success': true, 'data': data, 'user': usuario};
     } else {
       return {
         'success': false,
-        'message': data['message'] ?? 'Error desconocido',
+        'message': data['error'] ?? 'Error desconocido',
       };
     }
+  }
+
+  static void logout() {
+    SessionManager.clearSession();
   }
 }
