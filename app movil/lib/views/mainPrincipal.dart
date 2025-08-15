@@ -20,6 +20,10 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
   final Color detalle = const Color(0xFFFF9149);
   final Color texto = const Color(0xFF000000);
 
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+  late Future<List<Map<String, dynamic>>> _futureAutos;
+
   Future<List<Map<String, dynamic>>> obtenerListaDeAutos() async {
     try {
       return await ApiService.obtenerAutos();
@@ -27,6 +31,18 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
       print("Error al obtener la lista de autos: $e");
       return [];
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureAutos = obtenerListaDeAutos();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,6 +59,12 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
         child: Column(
           children: [
             TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  _query = value.trim().toLowerCase();
+                });
+              },
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.search, color: texto),
                 hintText: "Buscar vehículo",
@@ -57,7 +79,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
             ),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: obtenerListaDeAutos(),
+                future: _futureAutos,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -67,10 +89,29 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
                     return Center(child: Text('No se encontraron vehículos'));
                   } else {
                     final listaAutos = snapshot.data!;
+                    final String q = _query;
+                    final List<Map<String, dynamic>> filtrados =
+                        q.isEmpty
+                            ? listaAutos
+                            : listaAutos.where((auto) {
+                              final marca = (auto['marca'] ?? '').toString();
+                              final modelo = (auto['modelo'] ?? '').toString();
+                              final anioStr = (auto['anio'] ?? '').toString();
+                              return marca.toLowerCase().contains(q) ||
+                                  modelo.toLowerCase().contains(q) ||
+                                  anioStr.toLowerCase().contains(q);
+                            }).toList();
+
+                    if (filtrados.isEmpty) {
+                      return const Center(
+                        child: Text('No se encontraron vehículos'),
+                      );
+                    }
+
                     return ListView.builder(
-                      itemCount: listaAutos.length,
+                      itemCount: filtrados.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final auto = listaAutos[index];
+                        final auto = filtrados[index];
                         final id =
                             auto["_id"] is Map
                                 ? auto["_id"]["\$oid"]

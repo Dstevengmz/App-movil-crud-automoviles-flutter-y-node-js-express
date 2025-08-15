@@ -6,12 +6,20 @@ import { dirname, join } from 'path';
 import userRouter from "./routers/user.js";
 import carroRouter from "./routers/carro.js";
 import alquilerRouter from "./routers/alquiler.js";
-
+import cors from "cors"; 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config({ path: join(__dirname, '..', '.env') });
 
 const app = express();
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+};
+
+
+app.use(cors(corsOptions));
 
 const port = process.env.PORT || 4400;
 app.use(express.json());

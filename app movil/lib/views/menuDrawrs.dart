@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/session_manager.dart';
 import '../services/apiservicio.dart';
 import 'loginScreen.dart';
+import 'listaUsuarios.dart';
+import 'editarPerfil.dart';
 
 class PerfilUsuario extends StatelessWidget {
   const PerfilUsuario({super.key});
@@ -49,75 +51,116 @@ class PerfilUsuario extends StatelessWidget {
         ),
       ),
       backgroundColor: Colors.white,
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         children: [
           const SizedBox(height: 24),
-          const CircleAvatar(
-            radius: 40,
-            backgroundImage: NetworkImage(
-              'https://randomuser.me/api/portraits/men/1.jpg',
+          Center(
+            child: const CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(
+                'https://randomuser.me/api/portraits/men/1.jpg',
+              ),
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            usuario?.name ?? 'Usuario',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          Center(
+            child: Text(
+              usuario?.name ?? 'Usuario',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
           ),
-          Text(
-            usuario?.email ?? 'email@example.com',
-            style: const TextStyle(color: Colors.grey),
+          Center(
+            child: Text(
+              usuario?.email ?? 'email@example.com',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.grey),
+            ),
           ),
           const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.edit),
-                label: const Text('Editar perfil'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue[400],
-                  foregroundColor: Colors.white,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.badge),
+                  title: const Text('Nombre'),
+                  subtitle: Text(usuario?.name ?? 'Usuario'),
                 ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () => _cerrarSesion(context),
-                icon: const Icon(Icons.logout),
-                label: const Text('Cerrar Sesión'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[400],
-                  foregroundColor: Colors.white,
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.alternate_email),
+                  title: const Text('Email'),
+                  subtitle: Text(usuario?.email ?? 'email@example.com'),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      final changed = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditarPerfil(),
+                        ),
+                      );
+                      if (changed == true) {
+                        (context as Element).markNeedsBuild();
+                      }
+                    },
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Editar perfil'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightBlue[400],
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _cerrarSesion(context),
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Cerrar Sesión'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[400],
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 32),
           if (SessionManager.isLoggedIn) ...[
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('ID de Usuario'),
-              subtitle: Text(usuario?.id ?? 'N/A'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('ID de Usuario'),
+                subtitle: Text(usuario?.id ?? 'N/A'),
+              ),
             ),
             const Divider(),
           ],
-          const ListTile(
-            leading: Icon(Icons.phone),
-            title: Text('Teléfono'),
-            subtitle: Text('+57 300 123 4567'),
-          ),
-          const Divider(),
-          const ListTile(
-            leading: Icon(Icons.location_on),
-            title: Text('Dirección'),
-            subtitle: Text('Bogotá, Colombia'),
-          ),
-          const Divider(),
-          const ListTile(
-            leading: Icon(Icons.info),
-            title: Text('Acerca de'),
-            subtitle: Text(
-              'Usuario de la aplicación de alquiler de vehículos.',
-            ),
+          ListTile(
+            leading: const Icon(Icons.group),
+            title: const Text('Usuarios registrados'),
+            subtitle: const Text('Ver todos los usuarios'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ListaUsuarios()),
+              );
+            },
           ),
         ],
       ),

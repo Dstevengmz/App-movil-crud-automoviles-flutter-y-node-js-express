@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.js";
 const router = express.Router();
 
-router.post("/user", async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -76,12 +76,30 @@ router.get("/user/:id", async (req, res) => {
 
 router.put("/user/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, email, password } = req.body;
-  User.updateOne({ _id: id }, { $set: { name, email, password } })
-    .then((data) => res.status(200).json(data))
-    .catch((err) => {
-      console.error("Error al actualizar el usuario", err);
-      res.status(500).json({ error: err.message });
-    });
+  try {
+    const { name, email, password } = req.body;
+
+    const updateFields = {};
+    if (typeof name !== "undefined") updateFields.name = name;
+    if (typeof email !== "undefined") updateFields.email = email;
+    if (typeof password !== "undefined" && password) {
+      updateFields.password = await bcrypt.hash(password, 10);
+    }
+
+    const updated = await User.findByIdAndUpdate(
+      id,
+      { $set: updateFields },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    return res.status(200).json(updated);
+  } catch (err) {
+    console.error("Error al actualizar el usuario", err);
+    return res.status(500).json({ error: err.message });
+  }
 });
 export default router;

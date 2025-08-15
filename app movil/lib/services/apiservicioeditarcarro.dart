@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiServiceEditarCarro {
   static Future<Map<String, dynamic>> editarCarro(
@@ -10,7 +11,8 @@ class ApiServiceEditarCarro {
     bool disponible,
     String imagenUrl,
   ) async {
-    final url = Uri.parse('http://192.168.20.20:9000/api/carro/$id');
+    final String baseUrl = dotenv.get('URL');
+    final url = Uri.parse('$baseUrl/api/carro/$id');
 
     final response = await http.put(
       url,

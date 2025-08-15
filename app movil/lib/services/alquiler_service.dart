@@ -1,8 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AlquilerService {
-  static const String baseUrl = 'http://192.168.20.20:9000/api';
+  static String get baseUrl => dotenv.get('URL');
 
   static Future<Map<String, dynamic>> crearAlquiler({
     required String usuarioId,
@@ -11,7 +12,7 @@ class AlquilerService {
     required DateTime fechaFin,
     required double precioTotal,
   }) async {
-    final url = Uri.parse('$baseUrl/alquiler');
+    final url = Uri.parse('$baseUrl/api/alquiler');
 
     try {
       final response = await http.post(
@@ -44,7 +45,7 @@ class AlquilerService {
   static Future<Map<String, dynamic>> obtenerAlquileresUsuario(
     String usuarioId,
   ) async {
-    final url = Uri.parse('$baseUrl/alquileres/usuario/$usuarioId');
+    final url = Uri.parse('$baseUrl/api/alquileres/usuario/$usuarioId');
 
     try {
       final response = await http.get(url);
@@ -66,7 +67,7 @@ class AlquilerService {
   static Future<Map<String, dynamic>> finalizarAlquiler(
     String alquilerId,
   ) async {
-    final url = Uri.parse('$baseUrl/alquiler/$alquilerId/finalizar');
+    final url = Uri.parse('$baseUrl/api/alquiler/$alquilerId/finalizar');
 
     try {
       final response = await http.put(url);

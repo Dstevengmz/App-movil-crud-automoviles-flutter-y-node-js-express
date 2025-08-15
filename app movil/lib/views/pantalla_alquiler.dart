@@ -59,7 +59,6 @@ class _PantallaAlquilerState extends State<PantallaAlquiler> {
       setState(() {
         if (esInicio) {
           fechaInicio = fechaSeleccionada;
-          // Si la fecha de fin es anterior a la de inicio, limpiarla
           if (fechaFin != null && fechaFin!.isBefore(fechaInicio!)) {
             fechaFin = null;
             precioTotal = null;
@@ -128,13 +127,11 @@ class _PantallaAlquilerState extends State<PantallaAlquiler> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Cerrar diálogo
-                    Navigator.of(
-                      context,
-                    ).pop(); // Volver a la pantalla anterior
-                    Navigator.of(context).pop(); // Volver al menú principal
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
-                  child: const Text('OK'),
+                  child: const Text('Aceptar'),
                 ),
               ],
             ),
@@ -158,188 +155,189 @@ class _PantallaAlquilerState extends State<PantallaAlquiler> {
         backgroundColor: primario,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Información del vehículo
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: secundario,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      widget.imagenUrl,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder:
-                          (context, error, stackTrace) => const Icon(
-                            Icons.directions_car,
-                            size: 100,
-                            color: Colors.grey,
-                          ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    '${widget.marca} ${widget.modelo}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Año: ${widget.anio}',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  Text(
-                    'Precio por día: \$${widget.precio.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: detalle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Selección de fechas
-            const Text(
-              'Selecciona las fechas:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            InkWell(
-              onTap: () => _seleccionarFecha(context, true),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: secundario,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_today),
-                    const SizedBox(width: 12),
-                    Text(
-                      fechaInicio != null
-                          ? 'Inicio: ${fechaInicio!.day}/${fechaInicio!.month}/${fechaInicio!.year}'
-                          : 'Seleccionar fecha de inicio',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            InkWell(
-              onTap:
-                  fechaInicio != null
-                      ? () => _seleccionarFecha(context, false)
-                      : null,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: fechaInicio != null ? secundario : Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_today),
-                    const SizedBox(width: 12),
-                    Text(
-                      fechaFin != null
-                          ? 'Fin: ${fechaFin!.day}/${fechaFin!.month}/${fechaFin!.year}'
-                          : 'Seleccionar fecha de fin',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: fechaInicio != null ? Colors.black : Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            if (precioTotal != null)
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: detalle,
-                  borderRadius: BorderRadius.circular(8),
+                  color: secundario,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    const Text(
-                      'Total a pagar:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        widget.imagenUrl,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder:
+                            (context, error, stackTrace) => const Icon(
+                              Icons.directions_car,
+                              size: 100,
+                              color: Colors.grey,
+                            ),
                       ),
                     ),
+                    const SizedBox(height: 16),
                     Text(
-                      '\$${precioTotal!.toStringAsFixed(0)}',
+                      '${widget.marca} ${widget.modelo}',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      'Año: ${widget.anio}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      'Precio por día: \$${widget.precio.toStringAsFixed(0)}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: detalle,
                       ),
                     ),
                   ],
                 ),
               ),
 
-            const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed:
-                    (fechaInicio != null && fechaFin != null && !isLoading)
-                        ? _confirmarAlquiler
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: detalle,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
+              const Text(
+                'Selecciona las fechas:',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              InkWell(
+                onTap: () => _seleccionarFecha(context, true),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: secundario,
                     borderRadius: BorderRadius.circular(8),
                   ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.calendar_today),
+                      const SizedBox(width: 12),
+                      Text(
+                        fechaInicio != null
+                            ? 'Inicio: ${fechaInicio!.day}/${fechaInicio!.month}/${fechaInicio!.year}'
+                            : 'Seleccionar fecha de inicio',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ),
-                child:
-                    isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                          'Confirmar Alquiler',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 12),
+
+              InkWell(
+                onTap:
+                    fechaInicio != null
+                        ? () => _seleccionarFecha(context, false)
+                        : null,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: fechaInicio != null ? secundario : Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.calendar_today),
+                      const SizedBox(width: 12),
+                      Text(
+                        fechaFin != null
+                            ? 'Fin: ${fechaFin!.day}/${fechaFin!.month}/${fechaFin!.year}'
+                            : 'Seleccionar fecha de fin',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color:
+                              fechaInicio != null ? Colors.black : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              if (precioTotal != null)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: detalle,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Total a pagar:',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '\$${precioTotal!.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              const SizedBox(height: 32),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed:
+                      (fechaInicio != null && fechaFin != null && !isLoading)
+                          ? _confirmarAlquiler
+                          : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: detalle,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child:
+                      isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                            'Confirmar Alquiler',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

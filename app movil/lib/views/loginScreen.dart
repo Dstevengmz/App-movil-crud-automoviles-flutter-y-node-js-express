@@ -23,159 +23,161 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: fondo,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Icon(Icons.person_pin, size: 100, color: botones),
-            SizedBox(height: 20),
-            Text(
-              "Bienvenido",
-              style: TextStyle(
-                fontSize: 30,
-                color: campos,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Inicia sesión para continuar",
-              style: TextStyle(
-                fontSize: 20,
-                color: texto,
-                fontWeight: FontWeight.w400,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              style: TextStyle(color: texto),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: campos,
-                labelText: "Correo Electrónico",
-                labelStyle: TextStyle(color: texto),
-                prefixIcon: Icon(Icons.email, color: texto),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              style: TextStyle(color: texto),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: campos,
-                labelText: "Contraseña",
-                labelStyle: TextStyle(color: texto),
-                prefixIcon: Icon(Icons.lock, color: texto),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final result = await ApiService.login(
-                  emailController.text,
-                  passwordController.text,
-                );
-
-                if (result['success']) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MenuPrincipal()),
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder:
-                        (_) => AlertDialog(
-                          title: Text("Error"),
-                          content: Text(result['message']),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"),
-                            ),
-                          ],
-                        ),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: botones,
-                minimumSize: Size(double.infinity, 50),
-              ),
-              child: Text(
-                "Iniciar Sesión",
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Icon(Icons.person_pin, size: 100, color: botones),
+              SizedBox(height: 20),
+              Text(
+                "Bienvenido",
                 style: TextStyle(
-                  color: texto,
-                  fontSize: 20,
+                  fontSize: 30,
+                  color: campos,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "¿Olvidaste tu contraseña?",
-                  style: TextStyle(color: texto, fontSize: 16),
+              SizedBox(height: 20),
+              Text(
+                "Inicia sesión para continuar",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: texto,
+                  fontWeight: FontWeight.w400,
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Recuperar",
-                    style: TextStyle(
-                      color: botones,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: emailController,
+                style: TextStyle(color: texto),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: campos,
+                  labelText: "Correo Electrónico",
+                  labelStyle: TextStyle(color: texto),
+                  prefixIcon: Icon(Icons.email, color: texto),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
                   ),
                 ),
-                SizedBox(width: 20),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "¿No tienes una cuenta?",
-                  style: TextStyle(color: texto, fontSize: 16),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                style: TextStyle(color: texto),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: campos,
+                  labelText: "Contraseña",
+                  labelStyle: TextStyle(color: texto),
+                  prefixIcon: Icon(Icons.lock, color: texto),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
-                TextButton(
-                  onPressed: () {
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  final result = await ApiService.login(
+                    emailController.text,
+                    passwordController.text,
+                  );
+
+                  if (result['success']) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const RegistroScreen(),
-                      ),
+                      MaterialPageRoute(builder: (context) => MenuPrincipal()),
                     );
-                  },
-                  child: Text(
-                    "Regístrate",
-                    style: TextStyle(
-                      color: botones,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder:
+                          (_) => AlertDialog(
+                            title: const Text('Error'),
+                            content: Text(result['message']),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Aceptar'),
+                              ),
+                            ],
+                          ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: botones,
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                child: Text(
+                  "Iniciar Sesión",
+                  style: TextStyle(
+                    color: texto,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 20),
-          ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "¿Olvidaste tu contraseña?",
+                    style: TextStyle(color: texto, fontSize: 16),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Recuperar",
+                      style: TextStyle(
+                        color: botones,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "¿No tienes una cuenta?",
+                    style: TextStyle(color: texto, fontSize: 16),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegistroScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Regístrate",
+                      style: TextStyle(
+                        color: botones,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'mainPrincipal.dart';
 import 'loginScreen.dart';
 import '../services/apiservicioregistro.dart';
 
@@ -42,7 +41,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
     });
 
     try {
-      final resultado = await ApiServiceRegistro.registrarUsuario(
+      final resultado = await ApiServicioRegistro.registrarUsuario(
         _nombreController.text.trim(),
         _emailController.text.trim(),
         _passwordController.text,
@@ -50,9 +49,9 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
       if (resultado['success']) {
         _mostrarMensaje('Usuario registrado exitosamente');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MenuPrincipal()),
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false,
         );
       } else {
         _mostrarMensaje(resultado['message'], isError: true);

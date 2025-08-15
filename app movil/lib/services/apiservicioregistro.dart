@@ -1,23 +1,23 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:io';
 
-class ApiServiceRegistro {
+class ApiServicioRegistro {
   static Future<Map<String, dynamic>> registrarUsuario(
-    String nombre,
+    String name,
     String email,
     String password,
   ) async {
-    final url = Uri.parse('http://192.168.20.20:9000/api/user');
+    final String apiUrl = dotenv.get('URL');
+    final url = Uri.parse('$apiUrl/api/register');
+    print('URL de registro: $url');
 
     try {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': nombre,
-          'email': email,
-          'password': password,
-        }),
+        body: jsonEncode({'name': name, 'email': email, 'password': password}),
       );
 
       final data = jsonDecode(response.body);
@@ -35,6 +35,13 @@ class ApiServiceRegistro {
       }
     } catch (e) {
       print('Error de conexión: $e');
+      if (e is http.ClientException) {
+        print('Excepción del cliente: ${e.message}');
+      } else if (e is SocketException) {
+        print('Excepción de red: ${e.message}');
+      } else {
+        print('Otro error: ${e.toString()}');
+      }
       return {
         'success': false,
         'message': 'Error de conexión: ${e.toString()}',
