@@ -16,7 +16,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-     "start": "node Backendmercadolibre/src/index.js",  
+     "start": "node src/index.js", 
     "dev": "nodemon src/index.js"
   },
   "author": "",
