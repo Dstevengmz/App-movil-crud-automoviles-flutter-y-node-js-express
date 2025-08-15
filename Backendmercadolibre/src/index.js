@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
   res.send("La pagina esta corriendo");
 });
 
-app.listen(9000, '0.0.0.0', () => {
-  console.log('Servidor corriendo en http://0.0.0.0:9000');
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Servidor corriendo en http://0.0.0.0:${port}`);
 });
 
